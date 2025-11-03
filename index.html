@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            color: white;
+            margin: 0px auto;
+            overflow: hidden;
+            font-family: Maple Mono;
+            font-size: 4em;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        p {
+            margin: 0px;
+        }
+    </style>
+    <script>
+        window.addEventListener('load', () => {
+            const eventSource = new EventSource("http://localhost:52534/api/v1/stronghold/events");
+            eventSource.onmessage = (event) => {
+                console.log(event.data)
+                const data = JSON.parse(event.data);
+                if (data.predictions.length == 0) {
+                    document.getElementById('all').style.display = 'none';
+                    return;
+                }
+
+                document.getElementById('all').style.display = 'block';
+                const playerPosition = data.playerPosition;
+                const bestPrediction = data.predictions[0];
+                const isOverworld = playerPosition.isInOverworld;
+
+                const certainty = `${Math.round(bestPrediction.certainty * 100)}%`.padStart(4, ' ');
+                const predictionX = bestPrediction.chunkX * 16 + 4;
+                const predictionZ = bestPrediction.chunkZ * 16 + 4;
+                const netherX = Math.floor(predictionX / 8);
+                const netherZ = Math.floor(predictionZ / 8);
+                const coords = `(${netherX.toString().padStart(4, ' ')},${netherZ.toString().padStart(4, ' ')})`;
+                const distance = `${isOverworld ? Math.round(bestPrediction.overworldDistance) : Math.round(bestPrediction.overworldDistance / 8)}`.padStart(4, ' ');
+
+                document.getElementById('certainty').innerHTML = certainty;
+                document.getElementById('coords').innerHTML = coords;
+                document.getElementById('distance').innerHTML = distance;
+
+                const deltaX = isOverworld ? playerPosition.xInOverworld - predictionX : Math.round(playerPosition.xInOverworld / 8) - netherX;
+                const deltaZ = isOverworld ? playerPosition.zInOverworld - predictionZ : Math.round(playerPosition.zInOverworld / 8) - netherZ;
+
+                const theta = Math.atan2(deltaZ, deltaX) * 180 / Math.PI - playerPosition.horizontalAngle;
+
+                const canvas = document.getElementById('canvas');
+                const ctx = canvas.getContext('2d');
+                const image = new Image();
+                image.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(image, 0, 0);
+                    console.log(image.height, image.width)
+                    ctx.beginPath();
+                    ctx.moveTo(image.width / 2, image.height / 2);
+                    let x = image.width / 2 + Math.cos(theta * Math.PI / 180) * image.width / 2;
+                    let y = image.height / 2 + Math.sin(theta * Math.PI / 180) * image.height / 2;
+                    ctx.lineTo(x, y);
+                    ctx.strokeStyle = "red";
+                    ctx.lineWidth = 10;
+                    ctx.stroke();
+                }
+                image.src = 'compass.webp';
+            }
+
+        });
+    </script>
+</head>
+
+<body id="all">
+    <canvas width="160" height="160" style="width: 3em; margin-left: 4.5em;" id="canvas"></canvas>
+    <div style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start;">
+        <p style="width: 3em; white-space: pre" id="certainty">100%</p>
+        <p style="width: 7em; white-space: pre" id="coords">(-250, 34)</p>
+        <p style="width: 3em; white-space: pre" id="distance">2500</p>
+    </div>
+</body>
+
+</html>

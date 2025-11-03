@@ -1,0 +1,11 @@
+[project]
+name = "ninjabrain-bot-overlay"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiosseclient>=0.1.8",
+    "fastapi>=0.120.4",
+    "uvicorn>=0.38.0",
+]
