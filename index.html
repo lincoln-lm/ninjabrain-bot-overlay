@@ -31,8 +31,10 @@
                 console.log(event.data);
                 const data = JSON.parse(event.data);
                 if (data.boatState == "NONE") {
-                    document.getElementById('boat').innerHTML = ">.<";
-                    document.getElementById('boat').style.color = 'white';
+                    document.getElementById('boat').style.display = 'none';
+                    return;
+                    //document.getElementById('boat').innerHTML = ">.<";
+                    //document.getElementById('boat').style.color = 'white';
                 } else if (data.boatState == "ERROR") {
                     document.getElementById('boat').innerHTML = ">:(";
                     document.getElementById('boat').style.color = 'red';
@@ -40,7 +42,7 @@
                     document.getElementById('boat').innerHTML = ":o";
                     document.getElementById('boat').style.color = 'lightblue';
                 } else if (data.boatState == "VALID") {
-                    document.getElementById('boat').innerHTML = ":)";
+                    document.getElementById('boat').innerHTML = ">.<";
                     document.getElementById('boat').style.color = 'lightgreen';
                 }
                 document.getElementById('boat').style.display = 'block';
