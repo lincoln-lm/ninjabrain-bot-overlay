@@ -43,6 +43,7 @@
                     document.getElementById('boat').innerHTML = ":)";
                     document.getElementById('boat').style.color = 'lightgreen';
                 }
+                document.getElementById('boat').style.display = 'block';
             }
             eventSource.onmessage = (event) => {
                 console.log(event.data)
@@ -53,6 +54,7 @@
                 }
 
                 document.getElementById('all').style.display = 'block';
+                document.getElementById('boat').style.display = 'none';
                 const playerPosition = data.playerPosition;
                 const bestPrediction = data.predictions[0];
                 const isOverworld = playerPosition.isInOverworld;
@@ -97,14 +99,16 @@
     </script>
 </head>
 
-<body id="all">
-    <canvas width="160" height="160" style="width: 3em; margin-left: 4.5em;" id="canvas"></canvas>
-    <div style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start;">
-        <p style="width: 3em; white-space: pre" id="certainty">100%</p>
-        <p style="width: 7em; white-space: pre" id="coords">(-250, 34)</p>
-        <p style="width: 3em; white-space: pre" id="distance">2500</p>
-        <p style="width: 3em; white-space: pre" id="boat">>.< </p>
+<body>
+    <div id="all">
+        <canvas width="160" height="160" style="width: 3em; margin-left: 4.5em;" id="canvas"></canvas>
+        <div style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start;">
+            <p style="width: 3em; white-space: pre" id="certainty">100%</p>
+            <p style="width: 7em; white-space: pre" id="coords">(-250, 34)</p>
+            <p style="width: 3em; white-space: pre" id="distance">2500</p>
+        </div>
     </div>
+    <p style="width: 3em; white-space: pre" id="boat">>.< </p>
 </body>
 
 </html>
