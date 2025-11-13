@@ -38,10 +38,10 @@
                     document.getElementById('boat').style.color = 'red';
                 } else if (data.boatState == "MEASURING") {
                     document.getElementById('boat').innerHTML = ":o";
-                    document.getElementById('boat').style.color = 'blue';
+                    document.getElementById('boat').style.color = 'lightblue';
                 } else if (data.boatState == "VALID") {
                     document.getElementById('boat').innerHTML = ":)";
-                    document.getElementById('boat').style.color = 'green';
+                    document.getElementById('boat').style.color = 'lightgreen';
                 }
             }
             eventSource.onmessage = (event) => {
